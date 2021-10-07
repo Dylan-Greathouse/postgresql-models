@@ -16,7 +16,6 @@ describe('demo routes', () => {
         resource: 'bugs',
       })
       .then((res) => {
-        console.log('help!', res.body);
         expect(res.body).toEqual({
           id: expect.any(String),
           bug: expect.any(String),

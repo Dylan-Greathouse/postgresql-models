@@ -8,77 +8,79 @@ describe('demo routes', () => {
     return setup(pool);
   });
 
-  it('post fossils to table', () => {
+  it('post bugs to table', () => {
     return request(app)
-      .post('/api/v1/fossils')
+      .post('/api/v1/bugs')
       .send({
-        name: 'amber',
-        resource: 'fossils',
+        name: 'mantis',
+        resource: 'bugs',
       })
       .then((res) => {
+        console.log('help!', res.body);
         expect(res.body).toEqual({
           id: expect.any(String),
-          fossil: expect.any(String),
+          bug: expect.any(String),
           price: expect.any(Number),
           museum: expect.any(String),
         });
       });
   });
 
-  it('get fossil from table fossils', () => {
-    request(app).post('/api/v1/fossils').send();
+  it('get bugs from table bugs', () => {
+    request(app).post('/api/v1/bugs').send();
     return request(app)
-      .get('/api/v1/fossils')
+      .get('/api/v1/bugs')
       .then((res) => {
         expect(res.body).toEqual(expect.any(Array));
       });
   });
 
-  it('get a fossil from table fossils', () => {
-    request(app).post('/api/v1/fossils').send({
-      name: 'amber',
-      resource: 'fossils',
+  it('get a bug from table bugs', () => {
+    request(app).post('/api/v1/bugs').send({
+      name: 'mantis',
+      resource: 'bugs',
     });
     return request(app)
-      .get('/api/v1/fossils')
+      .get('/api/v1/bugs')
       .then((res) => {
         expect(res.body).toEqual([{
           id: expect.any(String),
-          fossil: expect.any(String),
+          bug: expect.any(String),
           price: expect.any(Number),
           museum: expect.any(String),
         }]);
       });
   });
 
-  it('update a fossil from table fossils', () => {
-    request(app).post('/api/v1/fossils').send({
-      name: 'amber',
-      resource: 'fossils',
+  it('update a bug from table bugs', () => {
+    request(app).post('/api/v1/bugs').send({
+      name: 'mantis',
+      resource: 'bugs',
     });
     return request(app)
-      .patch('/api/v1/fossils/1')
+      .patch('/api/v1/bugs/1')
       .send({
         id: '1',
-        fossil: 'amber',
+        bug: 'mantis',
         price: 1400,
-        museum: 'Amber is formed from the sap of ancient trees that hardened over time. Because of its beauty, it has often been traded and used as jewelry throughout history. However, individual specimens may contain ancient plants or insects trapped inside them! These are valuable resources for learning about ancient eras, such as when the dinosaurs roamed... And this is why they are sometimes displayed in certain...ahem... exceptional museums! Like mine.'
+        museum: 'Hoo! Don\'t let the mantis\'s angelic pose fool you...for it is truly monstrous. The mantis is known for its large size and tremendous strength...and for sickle-like arms that pack a punch. And though they tend to eat bugs and spiders...mantises have been known to dine on small animals too! And those eerie eyes! Oh my! Did you know it has five of them! Two big ones and three small! I shall faint if I think on it further...'
       
       })
       .then((res) => {
         expect(res.body).toEqual({
           id: expect.any(String),
-          fossil: expect.any(String),
+          bug: expect.any(String),
           price: expect.any(Number),
           museum: expect.any(String),
         });
       });
   });
 
-  it('delete a fossil from table fossils', async () => {
+  it('delete a bug from table bugs', async () => {
     const res = await request(app).delete('/api/v1/villagers/1');
     expect(res.body).toEqual({});
   });
+
 
   afterAll(() => {
     pool.end();

@@ -8,51 +8,45 @@ describe('demo routes', () => {
     return setup(pool);
   });
 
-  it('post bugs to table', () => {
-    return request(app)
+  it('post bugs to table', async () => {
+    const res = await request(app)
       .post('/api/v1/bugs')
       .send({
         name: 'mantis',
         resource: 'bugs',
-      })
-      .then((res) => {
-        expect(res.body).toEqual({
-          id: expect.any(String),
-          bug: expect.any(String),
-          price: expect.any(Number),
-          museum: expect.any(String),
-        });
       });
+    expect(res.body).toEqual({
+      id: expect.any(String),
+      bug: expect.any(String),
+      price: expect.any(Number),
+      museum: expect.any(String),
+    });
   });
 
-  it('get bugs from table bugs', () => {
-    request(app).post('/api/v1/bugs').send();
-    return request(app)
-      .get('/api/v1/bugs')
-      .then((res) => {
-        expect(res.body).toEqual(expect.any(Array));
-      });
+  it('get bugs from table bugs', async () => {
+    await request(app).post('/api/v1/bugs').send();
+    const res = await request(app)
+      .get('/api/v1/bugs');
+    expect(res.body).toEqual(expect.any(Array));
   });
 
-  it('get a bug from table bugs', () => {
-    request(app).post('/api/v1/bugs').send({
+  it('get a bug from table bugs', async () => {
+    await request(app).post('/api/v1/bugs').send({
       name: 'mantis',
       resource: 'bugs',
     });
-    return request(app)
-      .get('/api/v1/bugs')
-      .then((res) => {
-        expect(res.body).toEqual([{
-          id: expect.any(String),
-          bug: expect.any(String),
-          price: expect.any(Number),
-          museum: expect.any(String),
-        }]);
-      });
+    const res = await request(app)
+      .get('/api/v1/bugs/1');
+    expect(res.body).toEqual({
+      id: expect.any(String),
+      bug: expect.any(String),
+      price: expect.any(Number),
+      museum: expect.any(String),
+    });
   });
 
-  it('update a bug from table bugs', () => {
-    request(app).post('/api/v1/bugs').send({
+  it('update a bug from table bugs', async () => {
+    await request(app).post('/api/v1/bugs').send({
       name: 'mantis',
       resource: 'bugs',
     });

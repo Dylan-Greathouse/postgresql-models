@@ -8,13 +8,37 @@ describe('demo routes', () => {
     return setup(pool);
   });
 
-  it('post fossils to table', () => {
-    return request(app)
+  it('post fossils to table', async () => {
+    const res = await request(app)
       .post('/api/v1/fossils')
       .send({
         name: 'amber',
         resource: 'fossils',
-      })
+      });
+    expect(res.body).toEqual({
+      id: expect.any(String),
+      fossil: expect.any(String),
+      price: expect.any(Number),
+      museum: expect.any(String),
+    });
+  });
+
+  it('get fossil from table fossils', async () => {
+    await request(app).post('/api/v1/fossils').send();
+    return request(app)
+      .get('/api/v1/fossils')
+      .then((res) => {
+        expect(res.body).toEqual(expect.any(Array));
+      });
+  });
+
+  it('get a fossil from table fossils', async () => {
+    await request(app).post('/api/v1/fossils').send({
+      name: 'amber',
+      resource: 'fossils',
+    });
+    return request(app)
+      .get('/api/v1/fossils/1')
       .then((res) => {
         expect(res.body).toEqual({
           id: expect.any(String),
@@ -25,34 +49,8 @@ describe('demo routes', () => {
       });
   });
 
-  it('get fossil from table fossils', () => {
-    request(app).post('/api/v1/fossils').send();
-    return request(app)
-      .get('/api/v1/fossils')
-      .then((res) => {
-        expect(res.body).toEqual(expect.any(Array));
-      });
-  });
-
-  it('get a fossil from table fossils', () => {
-    request(app).post('/api/v1/fossils').send({
-      name: 'amber',
-      resource: 'fossils',
-    });
-    return request(app)
-      .get('/api/v1/fossils')
-      .then((res) => {
-        expect(res.body).toEqual([{
-          id: expect.any(String),
-          fossil: expect.any(String),
-          price: expect.any(Number),
-          museum: expect.any(String),
-        }]);
-      });
-  });
-
-  it('update a fossil from table fossils', () => {
-    request(app).post('/api/v1/fossils').send({
+  it('update a fossil from table fossils', async () => {
+    await request(app).post('/api/v1/fossils').send({
       name: 'amber',
       resource: 'fossils',
     });

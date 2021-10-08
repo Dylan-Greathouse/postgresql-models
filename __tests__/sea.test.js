@@ -8,25 +8,23 @@ describe('demo routes', () => {
     return setup(pool);
   });
 
-  it('post seas to table', () => {
-    return request(app)
+  it('post seas to table', async () => {
+    const res = await request(app)
       .post('/api/v1/sea')
       .send({
         name: 'seaweed',
         resource: 'sea',
-      })
-      .then((res) => {
-        expect(res.body).toEqual({
-          id: expect.any(String),
-          sea: expect.any(String),
-          price: expect.any(Number),
-          museum: expect.any(String),
-        });
       });
+    expect(res.body).toEqual({
+      id: expect.any(String),
+      sea: expect.any(String),
+      price: expect.any(Number),
+      museum: expect.any(String),
+    });
   });
 
-  it('get seas from table seas', () => {
-    request(app).post('/api/v1/sea').send();
+  it('get seas from table seas', async () => {
+    await request(app).post('/api/v1/sea').send();
     return request(app)
       .get('/api/v1/sea')
       .then((res) => {
@@ -34,27 +32,27 @@ describe('demo routes', () => {
       });
   });
 
-  it('get a sea from table seas', () => {
-    request(app).post('/api/v1/sea').send({
+  it('get a sea from table seas', async () => {
+    await request(app).post('/api/v1/sea').send({
       name: 'seaweed',
       resource: 'sea',
     });
     return request(app)
-      .get('/api/v1/sea')
+      .get('/api/v1/sea/1')
       .then((res) => {
-        expect(res.body).toEqual([
+        expect(res.body).toEqual(
           {
             id: expect.any(String),
             sea: expect.any(String),
             price: expect.any(Number),
             museum: expect.any(String),
-          },
-        ]);
+          }
+        );
       });
   });
 
-  it('update a sea from table seas', () => {
-    request(app).post('/api/v1/sea').send({
+  it('update a sea from table seas', async () => {
+    await request(app).post('/api/v1/sea').send({
       name: 'seaweed',
       resource: 'sea',
     });

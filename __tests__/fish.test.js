@@ -8,13 +8,37 @@ describe('demo routes', () => {
     return setup(pool);
   });
 
-  it('post fishes to table', () => {
-    return request(app)
+  it('post fishes to table', async () => {
+    const res = await request(app)
       .post('/api/v1/fish')
       .send({
         name: 'bitterling',
         resource: 'fish',
-      })
+      });
+    expect(res.body).toEqual({
+      id: expect.any(String),
+      fish: expect.any(String),
+      price: expect.any(Number),
+      museum: expect.any(String),
+    });
+  });
+
+  it('get fishes from table fishes', async () => {
+    await request(app).post('/api/v1/fish').send();
+    return request(app)
+      .get('/api/v1/fish')
+      .then((res) => {
+        expect(res.body).toEqual(expect.any(Array));
+      });
+  });
+
+  it('get a fish from table fishes', async () => {
+    await request(app).post('/api/v1/fish').send({
+      name: 'bitterlings',
+      resource: 'fish',
+    });
+    return request(app)
+      .get('/api/v1/fish/1')
       .then((res) => {
         expect(res.body).toEqual({
           id: expect.any(String),
@@ -25,34 +49,8 @@ describe('demo routes', () => {
       });
   });
 
-  it('get fishes from table fishes', () => {
-    request(app).post('/api/v1/fish').send();
-    return request(app)
-      .get('/api/v1/fish')
-      .then((res) => {
-        expect(res.body).toEqual(expect.any(Array));
-      });
-  });
-
-  it('get a fish from table fishes', () => {
-    request(app).post('/api/v1/fish').send({
-      name: 'bitterlings',
-      resource: 'fish',
-    });
-    return request(app)
-      .get('/api/v1/fish')
-      .then((res) => {
-        expect(res.body).toEqual([{
-          id: expect.any(String),
-          fish: expect.any(String),
-          price: expect.any(Number),
-          museum: expect.any(String),
-        }]);
-      });
-  });
-
-  it('update a fish from table fishes', () => {
-    request(app).post('/api/v1/fish').send({
+  it('update a fish from table fishes', async () => {
+    await request(app).post('/api/v1/fish').send({
       name: 'bitterlings',
       resource: 'fish',
     });
